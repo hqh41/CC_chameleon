@@ -1,0 +1,17 @@
+.idea/
+
+.DS_Store
+
+.vscode/
+*.txt
+*.pde
+*.png
+chameleon/
+css/
+doc/
+*.md
+*.xml
+*.webmanifest
+img/
+*.ico
+
