@@ -4,7 +4,6 @@
 
 .vscode/
 *.txt
-*.pde
 *.png
 chameleon/
 css/
