@@ -30,7 +30,7 @@ void draw(){
     spots[i].draw_SpinSpots();
     spots[i].y += 1;
     if(arm[i].y > height + radius){
-       arm[i].y = 0; 
+       arm[i].y = 0;
     }
     if(spots[i].y > height + radius){
       spots[i].y = 0;
