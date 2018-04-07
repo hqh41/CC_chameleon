@@ -1,17 +1,16 @@
-function myPoint (xpos, ypos) {
+function myPoint (xpos, ypos,cloudX, cloudY) {
   this.x = xpos;
   this.y = ypos;
+  this.cloudX = cloudX
+  this.cloudY = cloudY
   this.draw_pEllipse = function(){
     noStroke();
-    if(cloudColor)
-      fill("#eab4d4");
-    else
-      fill("#f7c90fb5");
+    fill(cloudColor);
     var i;
     for(i = 0; i < 6; i++){
       push();
-      translate(p, q);
-      ellipse(this.x, this.y, (0.7+i/10)*50, (0.3+i/10)*35);
+      translate(this.cloudX, this.cloudY);
+      ellipse(this.x, this.y, (0.7+i/10)*40, (0.3+i/10)*25);
       pop();
     }
   }

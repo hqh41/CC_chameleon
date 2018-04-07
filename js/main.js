@@ -13,7 +13,7 @@ var num_l = 5;
 var wide = 100;
 var speed = 25;
 var min_interspace = 50;
-var max_interspace = 200;
+var max_interspace = 300;
 var frameCount = 0;
 
 var recHeight;
@@ -26,61 +26,65 @@ var spots = new Array(18);
 
 var r = new Array(num_l);
 
-var colorFlag=0
-var accLevel
+var accLevel;
 
 var center = new Array(6);
-var poinStart = 30;
-var p;
+var poinStart = 20;
+var cloudY;
+var cloudX;
 
-var cloudColor = false;
+var cloudColor = "#f7c90fb5"; //yellow
+var colorFlag=0;      //yellow
+var rectColor = false; //yellow
 
 function setup() {
-    /****************initialisation varibales*****************/
-    createCanvas(windowWidth, windowHeight);
-    mic = new p5.AudioIn()
-    mic.start();
-    height = windowHeight/2
-    q = windowHeight/2 + 100
-    diff=0
-    isUp=false;
-    isDown=false;
-    isLock=false;
-    role = loadImage("lapin.gif")
-    p = windowWidth/4
-    recHeight=height+wide+30;
-    accLevel=0
+  /****************initialisation varibales*****************/
+  createCanvas(windowWidth, windowHeight);
+  mic = new p5.AudioIn()
+  mic.start();
+  height = windowHeight/2
+  cloudY = height+wide+7;
+  cloudX = windowWidth/6+110
+  diff=0
+  isUp=false;
+  isDown=false;
+  isLock=false;
+  role = loadImage("lapin.gif")
+  role2 = loadImage("gameover.jpg")
+  recHeight=height+wide+30;
+  accLevel=0
 
-    frameRate(20);
-    /****************draw rectangles*****************/
-    var start = 0;
-    var i;
-    r[0] = new Rectangle(start, windowWidth/2);
-    start += windowWidth/2;
-    for( i = 1; i < num_l; i++){
-        var tmp = Math.random() * (Max - Min) + Min;
-        var interspace =Math.random() * (max_interspace - min_interspace) + min_interspace;
-        colorFlag=random(0,10);
-        r[i] =new Rectangle(start+interspace, tmp,colorFlag);
-        start += (tmp + interspace);
-    }
-    /****************snow background*****************/
-    smooth();
-    noStroke();
-    for(i = 0; i < 10; i++){
-        var y = random(200, 500);
-        arm[i] = new SpinArm(a, y, snowSpeed);
-        spots[i] = new SpinSpots(a, y, snowSpeed);
-        a += 150.0;
-    }
-    a = 0.0;
+  frameRate(20);
+  /****************draw rectangles*****************/
+  var start = 0;
+  var i;
+  r[0] = new Rectangle(start, windowWidth/2);
+  start += windowWidth/2;
+  for( i = 1; i < num_l; i++){
+    var tmp = Math.random() * (Max - Min) + Min;
+    var interspace =Math.random() * (max_interspace - min_interspace) + min_interspace;
+    colorFlag=random(0,10);
+    r[i] =new Rectangle(start+interspace, tmp,colorFlag);
+    start += (tmp + interspace);
+  }
+  /****************snow background*****************/
+  smooth();
+  noStroke();
+  for(i = 0; i < 10; i++){
+    var y = random(200, 500);
+    arm[i] = new SpinArm(a, y, snowSpeed);
+    spots[i] = new SpinSpots(a, y, snowSpeed);
+    a += 150.0;
+  }
+  a = 0.0;
 }
 
 function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-    height =windowHeight/2
-    recHeight=height+wide-10
-
+  resizeCanvas(windowWidth, windowHeight);
+  height =windowHeight/2
+  recHeight=height+wide+30
+  cloudX = windowWidth/6+110
+  cloudY = height+wide+7;
 }
 
 function draw() {
@@ -91,14 +95,13 @@ function draw() {
   stroke(242, 156, 177);
 
   /****************draw game role with cloud*****************/
-  image(role,windowWidth/6,height-diff-42,role.width/2,role.height/2)
-
-  center[0] = new myPoint(poinStart, 0);
-  center[1] = new myPoint(2.5*poinStart, 0);
-  center[2] = new myPoint(3*poinStart, 0.3*poinStart);
-  center[3] = new myPoint(2.5*poinStart, 0.5*poinStart);
-  center[4] = new myPoint(1.5*poinStart, 0.7*poinStart);
-  center[5] = new myPoint(0, 0.3*poinStart);
+  image(role,windowWidth/6,height-diff-30,role.width/2,role.height/2)
+  center[0] = new myPoint(poinStart, 0 , cloudX, cloudY-diff);
+  center[1] = new myPoint(2.5*poinStart, 0,cloudX, cloudY-diff);
+  center[2] = new myPoint(3*poinStart, 0.3*poinStart,cloudX, cloudY-diff);
+  center[3] = new myPoint(2.5*poinStart, 0.5*poinStart,cloudX, cloudY-diff);
+  center[4] = new myPoint(1.5*poinStart, 0.7*poinStart,cloudX, cloudY-diff);
+  center[5] = new myPoint(0, 0.3*poinStart,cloudX, cloudY-diff);
   var i
   for(i = 0; i < 6; i++){
     center[i].draw_pEllipse();
@@ -108,7 +111,7 @@ function draw() {
 
   var i,e;
   for(i = 0; i < num_l; i++){
-    r[i].draw_rect();
+    r[i].color = r[i].draw_rect();
   }
   for( e in  r){
 
@@ -139,12 +142,12 @@ function draw() {
     }
   }
 
-  if(isUp&&diff===120)
+  if(isUp&&diff===140)
   {
     isUp=false;
     isDown=true;
   }
-  if(isUp&&diff<120)
+  if(isUp&&diff<140)
     diff+=20
 
   if(isDown&&diff>=0)
@@ -161,7 +164,12 @@ function draw() {
         console.log("voice")
     if(!isVoiceLock) {
       isVoiceLock=true;
-      cloudColor = !cloudColor;
+      if(cloudColor === "#f7c90fb5") {
+        cloudColor = "#eab4d4";
+      }
+      else {
+        cloudColor = "#f7c90fb5"
+      }
     }
   }
   if(speed>0&&micLevel<0.02)
@@ -172,12 +180,20 @@ function draw() {
   /****************check game over*****************/
 
 
-  // if((!at_rec(windowWidth/6+role.width/5))&&(diff===0))
-  // {
-  //     height+=10
-  //     height+=20
-  //     speed=0
-  // }
+   if((!at_rec(windowWidth/6+role.width/5))&&(diff===0))
+   {
+       //height+=10
+       //height+=20
+       //cloudY+10
+       //cloudY+=20
+       speed=0
+       image(role2,windowWidth/4,0,role2.width,role2.height)
+       document.getElementById('button').setAttribute("style", "display: block")
+   }
+  if(cloudColor !== rec_color(windowWidth/6+role.width/5) && at_rec(windowWidth/6+role.width/5))
+  {
+      speed = 0;
+  }
 
 }
 
